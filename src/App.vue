@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     {{ items }}<br />
-    <!-- {{ distance }}
-    <div>距离{{ distance }}</div> -->
+    {{ allLines }}
+    <!-- <div>距离{{ distance }}</div> -->
 
     <div
       class="parent"
@@ -93,34 +93,34 @@ onMounted(() => {
       height: 150,
       active: true,
     },
-    // {
-    //   x: 300,
-    //   y: 300,
-    //   width: 150,
-    //   height: 150,
-    //   active: true,
-    // },
-    // {
-    //   x: 300,
-    //   y: 300,
-    //   width: 150,
-    //   height: 150,
-    //   active: true,
-    // },
-    // {
-    //   x: 300,
-    //   y: 300,
-    //   width: 150,
-    //   height: 150,
-    //   active: true,
-    // },
-    // {
-    //   x: 300,
-    //   y: 300,
-    //   width: 150,
-    //   height: 150,
-    //   active: true,
-    // },
+    {
+      x: 300,
+      y: 300,
+      width: 150,
+      height: 150,
+      active: true,
+    },
+    {
+      x: 300,
+      y: 300,
+      width: 150,
+      height: 150,
+      active: true,
+    },
+    {
+      x: 300,
+      y: 300,
+      width: 150,
+      height: 150,
+      active: true,
+    },
+    {
+      x: 300,
+      y: 300,
+      width: 150,
+      height: 150,
+      active: true,
+    },
   ];
 });
 
@@ -145,42 +145,43 @@ const dragStart = (val: any, e: any) => {
 };
 // 拖动结束
 const draggEnd = (currentIndex: any, e: any) => {
-  allLines.value = [];
+  //   allLines.value = [];
   //   shouldShowLine.value = false;
 };
 //拖拽中
 const onDragging = (currentIndex: any, e: any) => {
-  const currentRect = {
-    x: e.x,
-    y: e.y,
-    width: items.value[currentIndex].width,
-    height: items.value[currentIndex].height,
-  };
+  const currentRect = items.value[currentIndex];
 
-  const newLines = [];
-  for (let i = 0; i < items.value.length; i++) {
+  const newLines = ref<any>([]);
+  //   for (let i = 0; i < items.value.length; i++) {
+  items.value.forEach((item: any, i: any) => {
     if (i !== currentIndex) {
-      const otherRect = {
-        x: items.value[i].x,
-        y: items.value[i].y,
-        width: items.value[i].width,
-        height: items.value[i].height,
-      };
-      const { start, end } = calculateLinePoints(currentRect, otherRect);
-      const distance = calculateDistance(start, end);
-      const position = {
-        x: (start.x + end.x) / 2,
-        y: (start.y + end.y) / 2,
-      };
-      newLines.push({
-        distance,
-        start,
-        end,
-        position,
-      });
+      // 检查是否重叠
+      const isOverlapping =
+        currentRect.x + currentRect.width >= item.x &&
+        currentRect.x <= item.x + item.width &&
+        currentRect.y + currentRect.height >= item.y &&
+        currentRect.y <= item.y + item.height;
+
+      console.log('isOverlapping', isOverlapping);
+      if (!isOverlapping) {
+        const otherRect = items.value[i];
+        const { start, end } = calculateLinePoints(currentRect, otherRect);
+        const distance = calculateDistance(start, end);
+        const position = {
+          x: (start.x + end.x) / 2,
+          y: (start.y + end.y) / 2,
+        };
+        newLines.value.push({
+          distance,
+          start,
+          end,
+          position,
+        });
+      }
     }
-  }
-  allLines.value = newLines;
+  });
+  allLines.value = newLines.value;
 };
 </script>
 

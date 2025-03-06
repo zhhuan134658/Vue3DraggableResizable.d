@@ -1,11 +1,6 @@
 <template>
   <!-- 连接线 -->
-  <svg
-    v-if="showLine"
-    class="connection-line"
-    :width="totalWidth"
-    :height="totalHeight"
-  >
+  <svg class="connection-line" :width="totalWidth" :height="totalHeight">
     <line
       :x1="lineStart.x"
       :y1="lineStart.y"
@@ -17,7 +12,7 @@
   </svg>
 
   <!-- 距离显示 -->
-  <div v-if="showDistance" class="distance-label" :style="distanceStyle">
+  <div class="distance-label" :style="distanceStyle">
     {{ closestDistance }}
   </div>
 </template>
