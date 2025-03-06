@@ -3,7 +3,6 @@
     {{ items }}<br />
     {{ allLines }}
     <!-- <div>距离{{ distance }}</div> -->
-
     <div
       class="parent"
       :style="{
