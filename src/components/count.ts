@@ -122,6 +122,7 @@ export function calculateLinePoints(rect1: any, rect2: any) {
       // console.log('rect1在rect2下方');
     }
   }
+
   return { start, end };
 }
 
@@ -137,5 +138,7 @@ function getMidpoint(x1: number, y1: number, x2: number, y2: number) {
 export function calculateDistance(point1: any, point2: any) {
   const dx = point2.x - point1.x;
   const dy = point2.y - point1.y;
-  return Math.sqrt(dx * dx + dy * dy);
+  const distance = Math.sqrt(dx * dx + dy * dy);
+
+  return distance;
 }

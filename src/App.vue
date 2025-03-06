@@ -42,9 +42,9 @@
           :disabledY="false"
           :lockAspectRatio="false"
           classNameHandle="my-handle"
-          @activated="print('activated', $event)"
+          @activated="activated(index, $event)"
           @deactivated="print('deactivated', $event)"
-          @drag-start="dragStart('drag-start', $event)"
+          @drag-start="dragStart(index, $event)"
           @resize-start="print('resize-start', $event)"
           @dragging="onDragging(index, $event)"
           @resizing="print(index, $event)"
@@ -134,6 +134,10 @@ const resizeEnd = (currentIndex: any, e: any) => {
     items.value[currentIndex].width = w;
     items.value[currentIndex].height = h;
   });
+};
+//激活时
+const activated = (currentIndex: any, e: any) => {
+  //   shouldShowLine.value = true;
 };
 // 拖动开始
 const dragStart = (val: any, e: any) => {
