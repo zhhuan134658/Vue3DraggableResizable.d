@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 // 计算连接线的起点和终点
 export function calculateLinePoints(rect1: any, rect2: any) {
   let start, end;
@@ -141,4 +142,37 @@ export function calculateDistance(point1: any, point2: any) {
   const distance = Math.sqrt(dx * dx + dy * dy);
 
   return distance;
+}
+
+// 获取svg各个起始点和结束点
+export function getStartAndEnd(currentIndex: any, e: any, items: any) {
+  const currentRect = items.value[currentIndex];
+  const newLines = ref<any>([]);
+  items.value.forEach((item: any, i: any) => {
+    if (i !== currentIndex) {
+      // 检查是否重叠
+      const isOverlapping =
+        currentRect.x + currentRect.width >= item.x &&
+        currentRect.x <= item.x + item.width &&
+        currentRect.y + currentRect.height >= item.y &&
+        currentRect.y <= item.y + item.height;
+
+      if (!isOverlapping) {
+        const otherRect = items.value[i];
+        const { start, end } = calculateLinePoints(currentRect, otherRect);
+        const distance = calculateDistance(start, end);
+        const position = {
+          x: (start.x + end.x) / 2,
+          y: (start.y + end.y) / 2,
+        };
+        newLines.value.push({
+          distance,
+          start,
+          end,
+          position,
+        });
+      }
+    }
+  });
+  return newLines.value;
 }
