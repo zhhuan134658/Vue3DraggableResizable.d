@@ -3,6 +3,7 @@
         <!-- {{ items }}<br /> -->
         <!-- {{ allLines }} -->
         <!-- <div>距离{{ distance }}</div> -->
+        <div @click="addnum">1111</div>
         <div class="parent" :style="{
             width: `${totalWidth}px`,
             height: `${totalHeight}px`,
@@ -11,15 +12,15 @@
             <ConnectionLine v-for="(line, index) in allLines" :key="index" :closest-distance="line.distance"
                 :line-start="line.start" :line-end="line.end" :closest-position="line.position"
                 :total-width="totalWidth" :total-height="totalHeight" />
-            <DraggableContainer :adsorbRows="deList" :adsorbCols="deList">
-                <Vue3DraggableResizable v-for="(item, index) in items" :key="index" :initW="item.width" :OFFSET="50"
-                    :initH="item.height" v-model:x="item.x" v-model:y="item.y" v-model:w="item.width"
+            <DraggableContainer :adsorbRows="deList" :adsorbCols="deList" :referenceLineVisible="true">
+                <Vue3DraggableResizable v-for="(item, index) in items" :key="index" :initW="item.width"
+                    :OFFSET="stepNum" :initH="item.height" v-model:x="item.x" v-model:y="item.y" v-model:w="item.width"
                     v-model:h="item.height" v-model:active="item.active" :draggable="draggable" :resizable="resizable"
                     :parent="true" :disabledX="false" :disabledW="false" :disabledH="false" :disabledY="false"
                     :lockAspectRatio="false" classNameHandle="my-handle" @activated="activated(index, $event)"
                     @deactivated="print('deactivated', $event)" @drag-start="dragStart(index, $event)"
                     @resize-start="print('resize-start', $event)" @dragging="onDragging(index, $event)"
-                    @resizing="print(index, $event)" @drag-end="draggEnd(index, $event)"
+                    @resizing="resizing(index, $event)" @drag-end="draggEnd(index, $event)"
                     @resize-end="resizeEnd(index, $event)">
                     rect {{ index + 1 }}
                 </Vue3DraggableResizable>
@@ -100,8 +101,13 @@ onMounted(() => {
         deList.value.push(i * 20);
     }
 });
+const stepNum = ref<number>(50);
+const addnum = () => {
+    stepNum.value = 100
+}
 const deList = ref<any>([]);
 const print = (val: any, e: any) => { };
+
 //更改大小后重新赋值
 const resizeEnd = (currentIndex: any, e: any) => {
     nextTick(() => {
@@ -111,6 +117,24 @@ const resizeEnd = (currentIndex: any, e: any) => {
         items.value[currentIndex].width = w;
         items.value[currentIndex].height = h;
     });
+
+    allLines.value = getStartAndEnd(currentIndex, e, items);
+
+
+};
+//缩放中
+const resizing = (currentIndex: any, e: any) => {
+    nextTick(() => {
+        const { x, y, w, h } = e;
+        items.value[currentIndex].x = x;
+        items.value[currentIndex].y = y;
+        items.value[currentIndex].width = w;
+        items.value[currentIndex].height = h;
+    });
+
+    allLines.value = getStartAndEnd(currentIndex, e, items);
+
+
 };
 //激活时
 const activated = (currentIndex: any, e: any) => {

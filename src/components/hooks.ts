@@ -220,6 +220,9 @@ export function initLimitSizeAndMethods(
         )
       );
     },
+    setstepNum(val: number) {
+      return props.OFFSET ? props.OFFSET : val;
+    },
   };
   return {
     ...limitProps,
@@ -251,10 +254,12 @@ export function initDraggableContainer(
   parentSize: ReturnType<typeof initParent>,
   OFFSET: any
 ) {
+  console.log('initDraggableContainer', OFFSET);
+
   const { left: x, top: y, width: w, height: h, dragging, id } = containerProps;
   const { setDragging, setEnable, setResizing, setResizingHandle } =
     containerProps;
-  const { setTop, setLeft } = limitProps;
+  const { setTop, setLeft, setstepNum } = limitProps;
   let lstX = 0;
   let lstY = 0;
   let lstPageX = 0;
@@ -296,12 +301,12 @@ export function initDraggableContainer(
     const deltaY = pageY - lstPageY;
 
     // 计算偏移量的倍数
-    const multipleX = Math.round(deltaX / OFFSET);
-    const multipleY = Math.round(deltaY / OFFSET);
+    const multipleX = Math.round(deltaX / setstepNum(OFFSET));
+    const multipleY = Math.round(deltaY / setstepNum(OFFSET));
 
     // 计算新的位置
-    let newLeft = lstX + multipleX * OFFSET;
-    let newTop = lstY + multipleY * OFFSET;
+    let newLeft = lstX + multipleX * setstepNum(OFFSET);
+    let newTop = lstY + multipleY * setstepNum(OFFSET);
 
     if (referenceLineMap !== null) {
       const widgetSelfLine = {
@@ -398,7 +403,7 @@ export function initDraggableContainer(
 
   return { containerRef };
 }
-
+// 定义 resize 间隔常量
 export function initResizeHandle(
   containerProps: ReturnType<typeof initState>,
   limitProps: ReturnType<typeof initLimitSizeAndMethods>,
@@ -428,12 +433,16 @@ export function initResizeHandle(
   let idx1 = '';
   const documentElement = document.documentElement;
   const resizeHandleDrag = (e: HandleEvent) => {
+    console.log('resizeHandleDrag', e);
+
     e.preventDefault();
     let [_pageX, _pageY] = getPosition(e);
     let deltaX = _pageX - lstPageX;
     let deltaY = _pageY - lstPageY;
     let _deltaX = deltaX;
     let _deltaY = deltaY;
+    console.log('898989', props.lockAspectRatio);
+
     if (props.lockAspectRatio) {
       deltaX = Math.abs(deltaX);
       deltaY = deltaX * tmpAspectRatio;
@@ -449,6 +458,8 @@ export function initResizeHandle(
         }
       }
     }
+    console.log('898989', idx0, idx1, lstW, deltaX);
+
     if (idx0 === 't') {
       setHeight(lstH - deltaY);
       setTop(lstY - (height.value - lstH));
@@ -461,6 +472,8 @@ export function initResizeHandle(
     } else if (idx1 === 'r') {
       setWidth(lstW + deltaX);
     }
+    // console.log('5656', width.value, height.value, left.value, top.value);
+
     emit('resizing', {
       x: left.value,
       y: top.value,
