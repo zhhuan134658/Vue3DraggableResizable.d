@@ -1,28 +1,28 @@
 {
-    "name": "vue3draggableadd-demo",
-    "private": false,
-    "description": "[Vue3 Component] 拖拽缩放并具有自动吸附对齐、参考线等功能",
-    "version": "0.0.9",
-    "main": "src/index.js",
-    "module": "src/index.js",
-    "unpkg": "src/index.js",
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview"
-    },
-    "dependencies": {
-        "less": "^4.2.2",
-        "vite-plugin-html": "^3.2.2",
-        "vite-plugin-vue-devtools": "^7.7.2",
-        "vue": "^3.5.13"
-    },
-    "devDependencies": {
-        "@vitejs/plugin-vue": "^5.2.1",
-        "@vue/tsconfig": "^0.7.0",
-        "typescript": "~5.7.2",
-        "vite": "^6.1.0",
-        "vue-tsc": "^2.2.0"
-    }
+  "name": "vue3draggableadd-demo1111",
+  "private": false,
+  "description": "[Vue3 Component] 拖拽缩放并具有自动吸附对齐、参考线等功能",
+  "version": "0.1.1",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "unpkg": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "less": "^4.2.2",
+    "vite-plugin-html": "^3.2.2",
+    "vite-plugin-vue-devtools": "^7.7.2",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/tsconfig": "^0.7.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.1.0",
+    "vue-tsc": "^2.2.0"
+  }
 }

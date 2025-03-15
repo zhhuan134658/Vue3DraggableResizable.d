@@ -101,7 +101,7 @@ onMounted(() => {
         deList.value.push(i * 20);
     }
 });
-const stepNum = ref<number>(50);
+const stepNum = ref<number>(100);
 const addnum = () => {
     stepNum.value = 100
 }

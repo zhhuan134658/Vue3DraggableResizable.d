@@ -409,8 +409,10 @@ export function initResizeHandle(
   limitProps: ReturnType<typeof initLimitSizeAndMethods>,
   parentSize: ReturnType<typeof initParent>,
   props: any,
-  emit: any
+  emit: any,
+  containerProvider: any // 新增参数，用于设置匹配线
 ) {
+  const { id } = containerProps;
   const { setWidth, setHeight, setLeft, setTop } = limitProps;
   const { width, height, left, top, aspectRatio } = containerProps;
   const {
@@ -480,8 +482,77 @@ export function initResizeHandle(
       w: width.value,
       h: height.value,
     });
+    // 新增：计算和设置对齐辅助线
+    const newreferenceLineMap = getReferenceLineMap(
+      containerProvider,
+      parentSize,
+      id
+    );
+    if (containerProvider && newreferenceLineMap) {
+      console.log('111111', containerProvider);
+
+      const widgetSelfLine = {
+        col: [
+          left.value,
+          left.value + width.value / 2,
+          left.value + width.value,
+        ],
+        row: [
+          top.value,
+          top.value + height.value / 2,
+          top.value + height.value,
+        ],
+      };
+      const matchedLine: any = {
+        row: widgetSelfLine.row
+          .map((i, index) => {
+            let match = null;
+            Object.values(newreferenceLineMap.row).forEach((referItem: any) => {
+              if (i >= referItem.min && i <= referItem.max) {
+                match = referItem.value;
+              }
+            });
+            if (match !== null) {
+              if (index === 0) {
+                setTop(match);
+              } else if (index === 1) {
+                setTop(Math.floor(match - height.value / 2));
+              } else if (index === 2) {
+                setTop(Math.floor(match - height.value));
+              }
+            }
+            return match;
+          })
+          .filter((i) => i !== null),
+        col: widgetSelfLine.col
+          .map((i, index) => {
+            let match = null;
+            Object.values(newreferenceLineMap.col).forEach((referItem: any) => {
+              if (i >= referItem.min && i <= referItem.max) {
+                match = referItem.value;
+              }
+            });
+            if (match !== null) {
+              if (index === 0) {
+                setLeft(match);
+              } else if (index === 1) {
+                setLeft(Math.floor(match - width.value / 2));
+              } else if (index === 2) {
+                setLeft(Math.floor(match - width.value));
+              }
+            }
+            return match;
+          })
+          .filter((i) => i !== null),
+      };
+      containerProvider.setMatchedLine(matchedLine);
+    } else {
+      console.log('0000000', containerProvider);
+    }
   };
+  // 定义一个函数，用于处理鼠标抬起事件
   const resizeHandleUp = () => {
+    // 触发resize-end事件，传递当前元素的left、top、width、height值
     emit('resize-end', {
       x: left.value,
       y: top.value,
@@ -498,6 +569,10 @@ export function initResizeHandle(
     // document.documentElement.removeEventListener('mouseup', resizeHandleUp)
     removeEvent(documentElement, MOVE_HANDLES, resizeHandleDrag);
     removeEvent(documentElement, UP_HANDLES, resizeHandleUp);
+    // 新增：停止缩放时，将匹配线设置为 null
+    if (containerProvider) {
+      containerProvider.setMatchedLine(null);
+    }
   };
   const resizeHandleDown = (e: HandleEvent, handleType: ResizingHandle) => {
     if (!props.resizable) return;

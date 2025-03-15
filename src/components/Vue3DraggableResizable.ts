@@ -38,7 +38,6 @@ const VdrProps = {
   OFFSET: {
     //偏移量
     type: Number,
-    default: 10,
   },
   initW: {
     // 初始宽度
@@ -217,7 +216,6 @@ const VueDraggableResizable = defineComponent({
       parentSize,
       containerProps
     );
-    console.log('containerProvider', containerProvider);
 
     // 初始化可拖拽容器的逻辑
     initDraggableContainer(
@@ -236,7 +234,8 @@ const VueDraggableResizable = defineComponent({
       limitProps,
       parentSize,
       props,
-      emit
+      emit,
+      containerProvider
     );
     // 监听 props 变化并更新状态
     watchProps(props, limitProps);
