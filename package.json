@@ -16,7 +16,8 @@
     "less": "^4.2.2",
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-vue-devtools": "^7.7.2",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "vue3draggableaddline": "^0.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
