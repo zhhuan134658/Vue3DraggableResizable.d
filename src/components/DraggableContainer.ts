@@ -13,6 +13,19 @@ import { IDENTITY } from './utils';
 export default defineComponent({
   name: 'DraggableContainer',
   props: {
+    allLines: {
+      type: Array,
+      default: [],
+    },
+    totalWidth: {
+      type: Number,
+      default: 0,
+    },
+    totalHeight: {
+      type: Number,
+      default: 0,
+    },
+
     disabled: {
       type: Boolean,
       default: false,
@@ -115,8 +128,40 @@ export default defineComponent({
     },
   },
   render() {
-    // console.log('12', this.renderReferenceLine());
+    const connectionLine = this.allLines.map((line: any) => {
+      return h(
+        'svg',
+        {
+          class: 'connection-line',
+          width: this.totalWidth,
+          height: this.totalHeight,
+        },
+        [
+          h('line', {
+            x1: line.start.x,
+            y1: line.start.y,
+            x2: line.end.x,
+            y2: line.end.y,
+            stroke: 'red',
+            strokeWidth: 1,
+          }),
+        ]
+      );
+    });
 
+    const distanceLabels = this.allLines.map((line: any, index) => {
+      return h(
+        'div',
+        {
+          class: 'distance-label',
+          style: {
+            top: `${line.position.y}px`,
+            left: `${line.position.x}px`,
+          },
+        },
+        [line.distance]
+      );
+    });
     return h(
       'div',
       {
@@ -125,6 +170,8 @@ export default defineComponent({
       [
         this.$slots.default && this.$slots.default(),
         ...this.renderReferenceLine(),
+        ...connectionLine,
+        ...distanceLabels,
       ]
     );
   },
